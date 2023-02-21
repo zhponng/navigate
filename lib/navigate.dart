@@ -23,7 +23,7 @@ class Navigate {
     if (_appRoutes.containsKey(routeName)) {
       var handler = _appRoutes[routeName];
       return await handler.renderWithAnimation(
-          context, arg, transactionType, replaceRoute);
+          context, routeName, arg, transactionType, replaceRoute);
     } else {
       throw ("ROUTE NOT MATCH");
     }
@@ -43,12 +43,13 @@ class Handler {
   TransactionType transactionType;
   Handler({this.pageBuilder, this.transactionType});
 
-  Future<dynamic> renderWithAnimation(BuildContext context, arg,
+  Future<dynamic> renderWithAnimation(BuildContext context, String routeName,arg,
       transactionType, ReplaceRoute replaceRoute) async {
     if (replaceRoute == ReplaceRoute.none) {
       return await Navigator.push(
           context,
           new PageRouteBuilder(
+              settings: RouteSettings(name: routeName, arguments: arg),
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
                 return pageBuilder(context, arg);
@@ -58,6 +59,7 @@ class Handler {
       return await Navigator.pushReplacement(
           context,
           new PageRouteBuilder(
+            settings: RouteSettings(name: routeName, arguments: arg),
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
                 return pageBuilder(context, arg);
@@ -67,6 +69,7 @@ class Handler {
       return await Navigator.pushAndRemoveUntil(
           context,
           new PageRouteBuilder(
+            settings: RouteSettings(name: routeName, arguments: arg),
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
                 return pageBuilder(context, arg);
